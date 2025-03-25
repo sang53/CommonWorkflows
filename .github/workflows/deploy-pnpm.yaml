@@ -33,6 +33,7 @@ jobs:
           git checkout --orphan deploy
           git rm -rf .
           mv dist/* .
+          cp index.html 404.html
           git add .
           git commit -m "Deploy to GitHub Pages"
           git push --force origin deploy
