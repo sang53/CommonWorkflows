@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build Backend for Deploy
 
 on:
   workflow_call:
@@ -21,19 +21,30 @@ jobs:
           cache: "pnpm"
 
       - name: Install Dependencies
-        run: pnpm install
+        run: |
+          pnpm approve-builds
+          pnpm install
 
       - name: Build project
         run: pnpm build
 
-      - name: Deploy to deploy branch
+      - name: Build to Deploy Branch
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@bot"
+
+          mkdir temp
+          mv package.json pnpm-lock.yaml public/ temp/
+
+          [ -d "src/views" ] && mkdir -p dist/views && mv src/views/* dist/views/
+
           git checkout --orphan deploy
           git rm -rf .
-          mv dist/* .
-          cp index.html 404.html
+
+          mv temp/* .
+          rm -rf temp 
+          rm -rf node_modules
+
           git add .
-          git commit -m "Deploy to GitHub Pages"
+          git commit -m "Build for Deploy"
           git push --force origin deploy
