@@ -34,7 +34,7 @@ jobs:
           git config --global user.email "github-actions@bot"
 
           mkdir temp
-          mv package.json pnpm-lock.yaml public/ temp/
+          mv package.json pnpm-lock.yaml pnpm-workspace.yaml public/ temp/
 
           [ -d "src/views" ] && mkdir -p dist/views && mv src/views/* dist/views/
 
